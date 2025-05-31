@@ -260,7 +260,7 @@ export const uploadProfileImage = async (req, res) => {
       });
     }
 
-    const IMAGE_UPLOAD_DIR = "assets/profileImage";
+  
 
     // Step 1: Get user from DB
     const user = await userModel.findById(userId);

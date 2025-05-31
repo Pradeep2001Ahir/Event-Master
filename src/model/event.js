@@ -12,7 +12,7 @@ const eventSchema = new Schema(
     capacity: { type: Number, require: true },
     ticketPrice: { type: Number, require: true },
     startDateTime: { type: Date, required: true },
-    images: { type: Array , default:[]},
+    images: { type: [String] , default:[]},
   },
   { timestamps: true, typeCast: true }
 );

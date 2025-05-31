@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import eventModel from "../../model/event.js";
 import moment from "moment";
 
@@ -16,7 +17,8 @@ export const getFilterEventData = async (
   perPage = 10,
   startDate,
   endDate,
-  priceSort
+  priceSort,
+  categoryId
 ) => {
   try {
     const skip = (page - 1) * perPage;
@@ -28,28 +30,50 @@ export const getFilterEventData = async (
     }
 
     // 📅 Filter by date range (optional)
-    if (startDate && endDate) {
-      const start = moment(startDate, "YYYY-MM-DD").startOf("day");
-      const end = moment(endDate, "YYYY-MM-DD").endOf("day");
+    if (startDate || endDate) {
+      filter.startDateTime = {}
+         
+       if(startDate){
+        const start = moment(startDate, "YYYY-MM-DD").startOf("day");
+        filter.startDateTime.$gte = start;
+       }
 
-      filter.startDateTime = {
-        $gte: start,
-        $lte: end,
-      };
+       if(endDate){
+        const end = moment(endDate, "YYYY-MM-DD").endOf("day");
+        filter.startDateTime.$lte = end;
+       }
+    }
+
+    //filter by category
+    if(categoryId && Array.isArray(categoryId) && categoryId.length> 0){
+      filter.categoryId = {
+        $in : categoryId.map((id) => new mongoose.Types.ObjectId(id),)
+      }
     }
 
     // 💰 Sorting by price (optional)
-    let sort = { _id: -1 }; // Default: newest first
+    let sort = {createdAt: -1 }; // Default: newest first
     if (priceSort === "asc") sort = { ticketPrice: 1 };
     else if (priceSort === "desc") sort = { ticketPrice: -1 };
 
     // 🎯 Final query
-    const events = await eventModel.find(filter)
+    // const events = await eventModel.find(filter)
+    //   .sort(sort)
+    //   .skip(skip)
+    //   .limit(perPage);
+    // return events;
+
+    const [event, totalCount] = await Promise.all([
+      eventModel.find(filter)
       .sort(sort)
       .skip(skip)
-      .limit(perPage);
+      .limit(perPage),
 
-    return events;
+      eventModel.countDocuments(filter)
+    ]);
+
+    return {event, totalCount};
+
   } catch (error) {
     throw new Error(error.message);
   }
