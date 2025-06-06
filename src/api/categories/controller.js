@@ -99,50 +99,51 @@ export const updateCategory = async (req, res) => {
 
 //get all category list 
 
-export const getCategoryList = async(req, res) => {
-  try{
-         const {language, search, page=1, perPage=10} = req.body;
+export const getCategoryList = async (req, res) => {
+  try {
+    const method = req.method;
+    const source = method === "GET" ? req.query : req.body;
 
-         const pageNo = (page-1) * perPage;
-          
-         let filter = {};
+    const {
+      language,
+      search,
+      page = 1,
+      perPage = 10
+    } = source;
 
-         if(search){
-          const reg = {
-            name : {$regex: ".*" + search + ".*" ,$options:"i"}
-          }
-           filter = Object.assign(filter, reg);
-         }
+    const pageNo = (page - 1) * perPage;
+    let filter = {};
 
-         const getAllCategroy = await categoryModel.find(filter)
-         .sort({_id:-1})
-         .skip(pageNo)
-         .limit(perPage);
+    if (search) {
+      filter.name = { $regex: ".*" + search + ".*", $options: "i" };
+    }
 
-         if(getAllCategroy && getAllCategroy.length){
-          const madeCategoryResponse = await Promise.all(getAllCategroy.map(async (category) => {
-            return new categoryResponse(category)
-          }))
+    const getAllCategory = await categoryModel.find(filter)
+      .sort({ _id: -1 })
+      .skip(pageNo)
+      .limit(perPage);
 
-          return res.status(200).send({
-            status:true,
-            message: await getMessage(language, "Category_List_Fetched_Success"),
-            data:madeCategoryResponse
-          })
-         }
-         else{
-          return res.send({
-            status:false,
-            message: await getMessage(language, "Feild_To_Fetched_List"),
-            data:[]
-          })
-         }
+    if (getAllCategory.length) {
+      const madeCategoryResponse = await Promise.all(
+        getAllCategory.map(category => new categoryResponse(category))
+      );
 
-  }
-  catch(error){
+      return res.status(200).send({
+        status: true,
+        message: await getMessage(language, "Category_List_Fetched_Success"),
+        data: madeCategoryResponse,
+      });
+    } else {
+      return res.status(200).send({
+        status: false,
+        message: await getMessage(language, "Feild_To_Fetched_List"),
+        data: [],
+      });
+    }
+  } catch (error) {
     return res.send({
-      status:false,
-      message:error.message
-    })
+      status: false,
+      message: error.message,
+    });
   }
-}
+};

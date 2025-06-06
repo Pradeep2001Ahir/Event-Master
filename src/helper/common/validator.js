@@ -32,6 +32,17 @@ export const validator = (method) => {
         body("startDateTime", "StartDateTime_is_Required").notEmpty(),
       ];
      }
+
+
+     case "bookingValidation": {
+  return [
+    body("eventId", "EventId_is_Required").notEmpty(),
+    body("numberOfTicket", "NumberOfTicket_is_Required").notEmpty().isInt().withMessage("NumberOfTicket_Must_Be_Number"),
+   
+  ];
+}
+
+
     default:
       return "Something went Wrong";
       break;

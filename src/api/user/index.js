@@ -3,8 +3,8 @@ const router = express.Router();
 
 import authMiddleware from '../../helper/common/jwtMiddleware.js';
 import {validator} from '../../helper/common/validator.js'
-import { changePassword, editProfile, getUserDetails, uploadProfileImage, userLogin, userRegister } from './controller.js';
-import upload from '../../helper/common/multerConfig.js';
+import { changePassword, editProfile, forgotPassword, getUserDetails, resetPassword, userLogin, userRegister } from './controller.js';
+// import upload from '../../helper/common/multerConfig.js';
 
 
 
@@ -12,8 +12,12 @@ router.post("/userRegisterd",validator("registerValidation"),userRegister);
 router.post("/userLogin",userLogin);
 router.get("/getUserDetails", authMiddleware, getUserDetails);
 router.patch("/changePassword", authMiddleware,changePassword);
-router.post("/uploadProfileImage:folder",authMiddleware, upload.single("profileImage"),uploadProfileImage);
-router.put("/editProfile",authMiddleware,editProfile)
+router.put("/editProfile",authMiddleware,editProfile);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
+
+
+// router.post("/uploadProfileImage:folder",authMiddleware, upload.single("profileImage"),uploadProfileImage);
 
 
 export default router;

@@ -5,7 +5,7 @@ export const languageSupport = {
 
 
 export const userRole = {
-    admin:1,
-    organizer:2,
-    user:3
-}
+  admin: "admin",
+  organizer: "organizer",
+  user: "user"
+};

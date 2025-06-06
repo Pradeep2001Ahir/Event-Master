@@ -15,6 +15,13 @@ const MESSAGE_DATA = Object.freeze({
   User_Not_Found: "User not found.",
   Old_Password_Incorrect: "Old password is incorrect.",
   Password_Chnage_Success: "Password changed successfully.",
+
+  
+  Reset_Link_Sent: "Password reset link sent to your email",
+  Invalid_Or_Expired_Token: "Invalid or expired token",
+  Password_Reset_Success: "Your password has been reset successfully",
+
+
   
   //categories
   Categorie_Already_Exist: "Categorie already exist",
@@ -35,6 +42,10 @@ const MESSAGE_DATA = Object.freeze({
    Event_List_Fetched_Success: "Event list fetched successfully.",
   Feild_To_Fetched_Event_List:"Feild to fetched Event list",
  
+  //Booking
+  Booking_Success: "Event booked successfully.",
+  Event_Capacity_Exceeded: "Not enough seats available.",
+Booking_Success: "Event booked successfully.",
 });
 
 export default MESSAGE_DATA;

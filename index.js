@@ -10,6 +10,8 @@ import dataBase from './src/helper/config/db.js';
 import userRouter from './src/api/user/index.js';
 import CategoriRouter from './src/api/categories/index.js';
 import eventRouter from './src/api/events/index.js'
+import bookingRouter from './src/api/booking/index.js'
+import imageUploadRouter from './src/api/ImageUpload/index.js'
 
 const app = express();
 
@@ -22,12 +24,15 @@ const corsOptions = {
     optionSuccessStatus:200
 }
 
+app.use(cors(corsOptions));
 
 app.use('/assets', express.static('assets')); //  Serve static images
 
 app.use("/user",userRouter);
-app.use("/Category",CategoriRouter);
+app.use("/category",CategoriRouter);
 app.use("/event",eventRouter);
+app.use("/booking",bookingRouter);
+app.use("/image", imageUploadRouter);
 
 const port = process.env.PORT || 5000;
 

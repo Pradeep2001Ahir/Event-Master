@@ -20,6 +20,7 @@ export const createEvent = async (req, res) => {
       ticketPrice,
       startDateTime,
       categoryId,
+      images = []
     } = req.body;
 
     const eventDate = moment(startDateTime, "YYYY-MM-DD HH:mm", true);
@@ -61,6 +62,7 @@ export const createEvent = async (req, res) => {
       capacity,
       ticketPrice,
       startDateTime: formattedStartDate,
+      images
     });
 
     const eventSave = await eventObj.save();
@@ -280,37 +282,37 @@ export const getFilterEventList = async (req, res) => {
 
 
 
-export const uploadEventImagesController = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const eventId = req.params.id; // ✅ FIXED
+// export const uploadEventImagesController = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const eventId = req.params.id; // ✅ FIXED
 
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({
-        status: false,
-        message: "No images uploaded",
-      });
-    }
+//     if (!req.files || req.files.length === 0) {
+//       return res.status(400).json({
+//         status: false,
+//         message: "No images uploaded",
+//       });
+//     }
 
   
-    const imagePaths = req.files.map((file) => file.path.replace(/\\/g, "/"));
+//     const imagePaths = req.files.map((file) => file.path.replace(/\\/g, "/"));
 
-    const event = await eventModel.findByIdAndUpdate(
-      eventId,
-      { $push: { images: { $each: imagePaths } } },
-      { new: true }
-    );
+//     const event = await eventModel.findByIdAndUpdate(
+//       eventId,
+//       { $push: { images: { $each: imagePaths } } },
+//       { new: true }
+//     );
 
-    return res.status(200).json({
-      status: true,
-      message: "Event images uploaded successfully",
-      data: new eventResponse(event),
-    });
-  } catch (error) {
-     console.error("❌ Upload error:", error);
-    return res.status(500).json({
-      status: false,
-      message: error.message,
-    });
-  }
-};
+//     return res.status(200).json({
+//       status: true,
+//       message: "Event images uploaded successfully",
+//       data: new eventResponse(event),
+//     });
+//   } catch (error) {
+//      console.error("❌ Upload error:", error);
+//     return res.status(500).json({
+//       status: false,
+//       message: error.message,
+//     });
+//   }
+// };
