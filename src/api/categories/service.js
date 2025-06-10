@@ -2,7 +2,7 @@ import categoryModel from "../../model/categories.js";
 
 export const categoryExist = async (name) => {
   try {
-    const categoryData = await categoryModel.findOne({ name: name }).lean();
+    const categoryData = await categoryModel.findOne({ name:  { $regex: `^${name}$`, $options: 'i' } }).lean();
 
     if (categoryData) {
       return true;

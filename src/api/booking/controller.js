@@ -6,6 +6,9 @@ import eventModel from "../../model/event.js";
 //Function
 import { getMessage } from "../../helper/common/helper.js";
 import mongoose from "mongoose";
+//Response
+import TicketResponse from "../../response/ticketResponse.js";
+import bookingTicketResponse from "../../response/bookingResponse.js";
 
 export const bookingTicket = async (req, res) => {
   try {
@@ -68,14 +71,14 @@ if (Array.isArray(totalBookedResult) && totalBookedResult.length > 0) {
     }
 
     //Calculate total price
-    const pricePerTicket = event.ticketPrice;
-    const totalPrice = numberOfTicket * pricePerTicket;
+   // const pricePerTicket = event.ticketPrice;
+    const totalPrice = numberOfTicket * event.ticketPrice;
 
     const booking = new bookingModel({
       userId: userId,
       eventId: eventId,
       numberOfTicket: numberOfTicket,
-      pricePerTicket
+      pricePerTicket : event.ticketPrice
     });
 
     const saveBooking = await booking.save();
@@ -85,7 +88,7 @@ if (Array.isArray(totalBookedResult) && totalBookedResult.length > 0) {
       status: true,
       message: await getMessage(language, "Booking_Success"),
       data: {
-        booking: saveBooking,
+        ticket: new bookingTicketResponse(saveBooking),
         totalPrice,
         remainingCapacity: remainingCapacity - numberOfTicket,
       },
@@ -94,6 +97,53 @@ if (Array.isArray(totalBookedResult) && totalBookedResult.length > 0) {
     return res.send({
       status: true,
       message: error.message,
+    });
+  }
+};
+
+
+
+
+//My Ticket
+export const getMyTickets = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const language = req.query.language || "en";
+
+    const bookings = await bookingModel
+      .find({ userId })
+      .populate("eventId")
+      .sort({ createdAt: -1 });
+
+    const upcoming = [];
+    const past = [];
+
+    for (let booking of bookings) {
+      const event = booking.eventId;
+      if (!event) continue;
+
+      const ticket = new TicketResponse(booking, event);
+
+      if (new Date(event.startDateTime) > new Date()) {
+        upcoming.push(ticket);
+      } else {
+        past.push(ticket);
+      }
+    }
+
+    return res.status(200).send({
+      status: true,
+      message: await getMessage(language, "Tickets_Fetched_Success"),
+      data: {
+        upcoming,
+        past
+      }
+    });
+
+  } catch (error) {
+    return res.send({
+      status: false,
+      message: error.message
     });
   }
 };

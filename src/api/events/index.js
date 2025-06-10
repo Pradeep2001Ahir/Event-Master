@@ -13,9 +13,4 @@ router.get("/getEventDetails/:id", authMiddleware,getEventDetails);
 router.post("/getFiletEventData", authMiddleware ,getFilterEventList);
 
 
-
-
-
-// router.post("/uploadEventIamge/:id/:folder", authMiddleware, upload.array("images",5), uploadEventImagesController);
-// router.post("/getEventList", authMiddleware ,getEventList);
 export default router;

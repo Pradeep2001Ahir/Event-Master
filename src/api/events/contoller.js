@@ -181,59 +181,6 @@ export const getEventDetails = async (req, res) => {
   }
 };
 
-// event listing
-
-//  export const getEventList = async(req, res) => {
-//   try{
-//         const {language="en", search, page=1, perPage=10} = req.body;
-
-//         const pageNo= (page-1) * perPage;
-
-//         let filter= {};
-
-//         if(search){
-//           const reg = {
-//             title : {$regex: ".*" + search + ".*", $options:"i"}
-//           }
-
-//           filter = Object.assign(filter, reg);
-//         }
-
-//         const getAllEvent  = await eventModel.find(filter)
-//         .sort({_id:-1})
-//         .skip({pageNo})
-//         .limit({perPage});
-
-//         if(getAllEvent && getAllEvent.length) {
-//           const madeEventResponse = await Promise.all(getAllEvent.map(async (event) => {
-//             return new eventResponse(event);
-//           }))
-           
-//          const totalCount = await eventModel.countDocument(filter);
-//      
-//           return res.status(200).send({
-//             status:true,
-//             message: await getMessage(language, "Event_List_Fetched_Success"),
-//             totalCount: totalCount,     
-//             data:madeEventResponse
-//           })
-//         }
-//         else{
-//           return res.send({
-//             status:false,
-//             message: await getMessage(language, "Feild_To_Fetched_Event_List"),
-//             data:[]
-//           })
-//         }
-
-//   }
-//   catch(error){
-//     return res.send({
-//       status:false,
-//       message: error.message
-//     })
-//   }
-//  }
 
 // get all event list with filter
 export const getFilterEventList = async (req, res) => {
@@ -282,37 +229,3 @@ export const getFilterEventList = async (req, res) => {
 
 
 
-// export const uploadEventImagesController = async (req, res) => {
-//   try {
-//     const userId = req.user.id;
-//     const eventId = req.params.id; // ✅ FIXED
-
-//     if (!req.files || req.files.length === 0) {
-//       return res.status(400).json({
-//         status: false,
-//         message: "No images uploaded",
-//       });
-//     }
-
-  
-//     const imagePaths = req.files.map((file) => file.path.replace(/\\/g, "/"));
-
-//     const event = await eventModel.findByIdAndUpdate(
-//       eventId,
-//       { $push: { images: { $each: imagePaths } } },
-//       { new: true }
-//     );
-
-//     return res.status(200).json({
-//       status: true,
-//       message: "Event images uploaded successfully",
-//       data: new eventResponse(event),
-//     });
-//   } catch (error) {
-//      console.error("❌ Upload error:", error);
-//     return res.status(500).json({
-//       status: false,
-//       message: error.message,
-//     });
-//   }
-// };

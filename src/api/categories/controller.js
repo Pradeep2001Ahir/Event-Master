@@ -70,6 +70,19 @@ export const updateCategory = async (req, res) => {
       });
     }
 
+    //  Check if the new name already exists (case-insensitive) in another category
+    const existingCategory = await categoryModel.findOne({
+      name: { $regex: `^${name}$`, $options: 'i' },
+      _id: { $ne: id }  // make sure it's not the same category
+    }).lean();
+
+    if (existingCategory) {
+      return res.send({
+        status: false,
+        message: await getMessage(language, "Categorie_Already_Exist"),
+      });
+    }
+
     const updatedCategory = await categoryModel.findByIdAndUpdate(
       id,
       { $set: { name } },
@@ -101,45 +114,15 @@ export const updateCategory = async (req, res) => {
 
 export const getCategoryList = async (req, res) => {
   try {
-    const method = req.method;
-    const source = method === "GET" ? req.query : req.body;
+      const language = req.query.language || "en";
 
-    const {
-      language,
-      search,
-      page = 1,
-      perPage = 10
-    } = source;
-
-    const pageNo = (page - 1) * perPage;
-    let filter = {};
-
-    if (search) {
-      filter.name = { $regex: ".*" + search + ".*", $options: "i" };
-    }
-
-    const getAllCategory = await categoryModel.find(filter)
-      .sort({ _id: -1 })
-      .skip(pageNo)
-      .limit(perPage);
-
-    if (getAllCategory.length) {
-      const madeCategoryResponse = await Promise.all(
-        getAllCategory.map(category => new categoryResponse(category))
-      );
+      const categories = await categoryModel.find().sort({createdAt : -1});
 
       return res.status(200).send({
-        status: true,
-        message: await getMessage(language, "Category_List_Fetched_Success"),
-        data: madeCategoryResponse,
+        status : true,
+        message : await getMessage(language, "Category_List_Fetched_Success"),
+        data : categories.map((category) => new categoryResponse(category))
       });
-    } else {
-      return res.status(200).send({
-        status: false,
-        message: await getMessage(language, "Feild_To_Fetched_List"),
-        data: [],
-      });
-    }
   } catch (error) {
     return res.send({
       status: false,

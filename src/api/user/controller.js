@@ -271,62 +271,6 @@ export const changePassword = async (req, res) => {
 };
 
 
-// //profileImage
-// export const uploadProfileImage = async (req, res) => {
-//   try {
-//     const userId = req.user.id;
-
-//     if (!req.file) {
-//       return res.status(400).json({
-//         status: false,
-//         message: "No file uploaded",
-//       });
-//     }
-
-  
-
-//     // Step 1: Get user from DB
-//     const user = await userModel.findById(userId);
-
-//     // Step 2: Delete previous image if exists
-//     if (user?.profileImage) {
-//       const oldImagePath = path.resolve(user.profileImage); // absolute path
-
-//       if (fs.existsSync(oldImagePath)) {
-//         fs.unlinkSync(oldImagePath);
-//         console.log("🧹 Deleted old image:", oldImagePath);
-//       } else {
-//         console.log("⚠ Old image not found:", oldImagePath);
-//       }
-//     }
-
-//     // Step 3: Store new image path (standardized)
-//     const newImagePath = req.file.path.replace(/\\/g, "/");
-
-//     const updatedUser = await userModel.findByIdAndUpdate(
-//       userId,
-//       { profileImage: newImagePath },
-//       { new: true }
-//     );
-
-//     return res.status(200).json({
-//       status: true,
-//       message: "Profile image updated successfully",
-//       data: new userResponse(updatedUser),
-//     });
-//   } catch (error) {
-//     console.error("❌ Image upload error:", error);
-//     return res.status(500).json({
-//       status: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-
-
-
-
 
 //forget password
 

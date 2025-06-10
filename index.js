@@ -12,7 +12,8 @@ import CategoriRouter from './src/api/categories/index.js';
 import eventRouter from './src/api/events/index.js'
 import bookingRouter from './src/api/booking/index.js'
 import imageUploadRouter from './src/api/ImageUpload/index.js'
-
+import dashboard from './src/api/Dashboard/index.js';
+import mnageUserRole from './src/api/admin/index.js';
 const app = express();
 
 app.use(express.json({limit:"200mb"}));
@@ -33,6 +34,8 @@ app.use("/category",CategoriRouter);
 app.use("/event",eventRouter);
 app.use("/booking",bookingRouter);
 app.use("/image", imageUploadRouter);
+app.use("/dashbord",dashboard);
+app.use("/admin",mnageUserRole);
 
 const port = process.env.PORT || 5000;
 
